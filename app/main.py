@@ -16,6 +16,7 @@ from app.core.exception_handlers import register_exception_handlers
 from app.core.http_client import dispose_http_client, init_http_client
 from app.core.logging import setup_logging
 from app.core.middleware import RequestIdMiddleware
+from app.core.openapi import API_DESCRIPTION, OPENAPI_CONTACT, OPENAPI_TAGS
 from app.db.redis import dispose_redis, init_redis
 from app.db.session import dispose_db, init_db
 
@@ -50,7 +51,12 @@ def create_app() -> FastAPI:
 
     application = FastAPI(
         title=settings.app_name,
-        description=("API Gateway тендерной IT-площадки: проверка ключа, лимит запросов и проксирование к Grok."),
+        description=API_DESCRIPTION,
+        version="0.1.0",
+        openapi_tags=OPENAPI_TAGS,
+        openapi_url="/openapi.json",
+        docs_url="/docs",
+        contact=OPENAPI_CONTACT,
         lifespan=lifespan,
         debug=settings.debug,
     )

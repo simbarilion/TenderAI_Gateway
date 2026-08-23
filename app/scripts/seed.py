@@ -21,7 +21,10 @@ SEED_KEY_NAME = "Аналитик тендеров"
 
 
 async def seed() -> None:
-    """Создаёт пользователя и ключ, если их ещё нет, и печатает сырой ключ в stdout."""
+    """Создаёт демо-пользователя и API-ключ, если пользователя ещё нет.
+    При первом запуске печатает сырой API-ключ в stdout.
+    Повторный запуск существующий ключ не раскрывает.
+    """
     settings = get_settings()
     init_db(settings.resolve_database_url(), echo=settings.debug)
     try:

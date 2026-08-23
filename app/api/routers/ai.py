@@ -1,27 +1,43 @@
-"""Эндпоинт проксирования prompt-а пользователя в AI модель."""
+"""Эндпоинт проксирования prompt пользователя в AI модель."""
 
 from fastapi import APIRouter, Depends
 
 from app.api.dependencies import get_current_user, get_generation_service
+from app.core.openapi import GENERATE_RESPONSES
 from app.schemas.ai import GenerateRequest, GenerateResponse
-from app.schemas.common import ErrorResponse
 from app.services.auth import AuthenticatedUser
 from app.services.generation import GenerationService
 
 router = APIRouter(prefix="/api/v1/ai", tags=["ai"])
 
-_ERROR_RESPONSES = {
-    401: {"model": ErrorResponse},
-    403: {"model": ErrorResponse},
-    422: {"model": ErrorResponse},
-    429: {"model": ErrorResponse},
-    502: {"model": ErrorResponse},
-    503: {"model": ErrorResponse},
-    504: {"model": ErrorResponse},
-}
 
-
-@router.post("/generate", response_model=GenerateResponse, responses=_ERROR_RESPONSES)
+@router.post(
+    "/generate",
+    response_model=GenerateResponse,
+    summary="Проксировать prompt в AI модель",
+    description=(
+        "Принимает описание IT-тендера или ТЗ, проверяет политики Gateway "
+        "и пересылает prompt во внешнюю модель.\n\n"
+        "**Что отправить**\n"
+        "- Заголовок `Authorization: Bearer <api_key>` — ключ из `poetry run seed`\n"
+        '- JSON `{"prompt": "..."}` — от 1 до 8000 символов, без системной инструкции\n\n'
+        "**Что делает сервис**\n"
+        "- Сверяет хеш ключа в PostgreSQL\n"
+        "- Считает запросы пользователя в Redis: не больше 5 за 60 секунд\n"
+        "- Добавляет системную инструкцию помощника тендерной площадки и вызывает xAI\n"
+        "- Пишет технический лог (провайдер, модель, статус, latency) без текста prompt и ответа\n\n"
+        "**Что вернётся**\n"
+        "- `200` — `response` и `model`\n"
+        "- `401` — нет или неизвестный ключ\n"
+        "- `403` — ключ или пользователь отключены\n"
+        "- `422` — пустой или слишком длинный prompt\n"
+        "- `429` — лимит площадки, AI модель не вызвалась\n"
+        "- `502` — ошибка или лимит xAI\n"
+        "- `503` — серверный `XAI_API_KEY` отклонён провайдером\n"
+        "- `504` — таймаут или сеть до xAI"
+    ),
+    responses=GENERATE_RESPONSES,
+)
 async def generate(
     body: GenerateRequest,
     user: AuthenticatedUser = Depends(get_current_user),
