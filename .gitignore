@@ -47,3 +47,10 @@ docker-compose.override.yml
 # ================================
 tmp/
 temp/
+
+# ================================
+# Local planning
+# ================================
+memory-bank/
+analysis/
+algorithm/

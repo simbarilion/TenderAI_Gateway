@@ -31,7 +31,7 @@ lint = [
 
 [tool.ruff]
 line-length = 119
-target-version = "py312"
+target-version = "py313"
 exclude = [
     ".git",
     "__pycache__",
