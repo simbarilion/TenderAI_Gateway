@@ -7,23 +7,18 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.core.exceptions import ErrorCode, GatewayError
 from app.core.logging import REQUEST_ID_HEADER, get_request_id
+from app.schemas.common import ErrorResponse
 
 logger = logging.getLogger(__name__)
 
 
 def _error_body(*, error: ErrorCode, message: str) -> dict[str, str]:
-    """Собирает единообразное JSON-тело ошибки.
-    Args:
-        error: код из `ErrorCode`.
-        message: Текст для клиента.
-    Returns:
-        Словарь `error`, `message`, `request_id` для ответа.
-    """
-    return {
-        "error": error.value,
-        "message": message,
-        "request_id": get_request_id(),
-    }
+    """Собирает JSON-тело ошибки по схеме `ErrorResponse`."""
+    return ErrorResponse(
+        error=error.value,
+        message=message,
+        request_id=get_request_id(),
+    ).model_dump()
 
 
 async def handle_gateway_error(_: Request, exc: GatewayError) -> JSONResponse:

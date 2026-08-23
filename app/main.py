@@ -1,6 +1,7 @@
 """Точка входа FastAPI-приложения TenderAI Gateway.
 
-Модуль собирает приложение: настройки, логирование, lifespan, middleware и обработчики доменных ошибок.
+Модуль собирает приложение: настройки, логирование, lifespan, middleware, обработчики доменных ошибок,
+инициализация базы данных и http клиента, подключение routers.
 """
 
 import logging
@@ -9,6 +10,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from app.api.router import api_router
 from app.core.config import Settings, get_settings
 from app.core.exception_handlers import register_exception_handlers
 from app.core.http_client import dispose_http_client, init_http_client
@@ -42,7 +44,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 def create_app() -> FastAPI:
-    """Собирает приложение: логи, middleware, handlers, lifespan."""
+    """Собирает приложение: логи, lifespan, middleware, handlers, routers."""
     settings = get_settings()
     setup_logging(settings.log_level)
 
@@ -55,6 +57,7 @@ def create_app() -> FastAPI:
     application.state.settings = settings
     application.add_middleware(RequestIdMiddleware)
     register_exception_handlers(application)
+    application.include_router(api_router)
     return application
 
 
