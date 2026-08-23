@@ -13,6 +13,7 @@ from app.core.config import Settings, get_settings
 from app.core.exception_handlers import register_exception_handlers
 from app.core.logging import setup_logging
 from app.core.middleware import RequestIdMiddleware
+from app.db.redis import dispose_redis, init_redis
 from app.db.session import dispose_db, init_db
 
 logger = logging.getLogger(__name__)
@@ -23,10 +24,12 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     """Открывает и закрывает жизненный цикл процесса."""
     settings: Settings = app.state.settings
     init_db(settings.resolve_database_url(), echo=settings.debug)
+    await init_redis(settings.redis_url)
     logger.info("Запуск %s", settings.app_name)
     try:
         yield
     finally:
+        await dispose_redis()
         await dispose_db()
         logger.info("Остановка %s", settings.app_name)
 

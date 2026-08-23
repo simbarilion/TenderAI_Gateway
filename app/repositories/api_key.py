@@ -13,6 +13,12 @@ class APIKeyRepository:
     def __init__(self, session: AsyncSession) -> None:
         self._session = session
 
+    async def get_by_hash(self, key_hash: str) -> APIKey | None:
+        """Возвращает ключ вместе с пользователем или None. Активность не фильтрует."""
+        stmt = select(APIKey).options(joinedload(APIKey.user)).where(APIKey.key_hash == key_hash)
+        result = await self._session.execute(stmt)
+        return result.unique().scalar_one_or_none()
+
     async def get_active_by_hash(self, key_hash: str) -> APIKey | None:
         """Возвращает активный ключ вместе с пользователем или None.
         Неактивный ключ не возвращается.
