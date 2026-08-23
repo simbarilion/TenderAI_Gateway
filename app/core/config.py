@@ -104,8 +104,7 @@ class Settings(BaseSettings):
     def resolve_database_url(self) -> str:
         """Возвращает URL PostgreSQL для AsyncEngine.
         Если задан `database_url`, он нормализуется под asyncpg.
-        Иначе URL собирается из `db_user`, `db_password`, `db_host`,
-        `db_port` и `db_name`.
+        Иначе URL собирается из `db_user`, `db_password`, `db_host`,`db_port` и `db_name`.
         Returns:
             Строка подключения вида `postgresql+asyncpg://user:pass@host:port/db`.
         """
