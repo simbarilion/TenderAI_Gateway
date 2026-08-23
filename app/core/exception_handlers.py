@@ -27,7 +27,7 @@ def _error_body(*, error: ErrorCode, message: str) -> dict[str, str]:
 
 
 async def handle_gateway_error(_: Request, exc: GatewayError) -> JSONResponse:
-    """Превращает доменное исключение сервиса в HTTP-ответ Gateway.
+    """Превращает доменное исключение сервиса в HTTP-ответ приложения.
     Args:
         _: Запрос, на котором сработало исключение.
         exc: Ошибка сервисного слоя с уже выбранным статусом и кодом.

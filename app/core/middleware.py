@@ -1,4 +1,4 @@
-"""HTTP-middleware сквозных заголовков TenderAI Gateway."""
+"""HTTP-middleware приложения."""
 
 from collections.abc import Awaitable, Callable
 from uuid import UUID, uuid4

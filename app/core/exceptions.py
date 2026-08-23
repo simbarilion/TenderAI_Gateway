@@ -1,4 +1,4 @@
-"""Доменные исключения TenderAI Gateway"""
+"""Доменные исключения приложения."""
 
 from enum import StrEnum
 
@@ -20,7 +20,7 @@ class ErrorCode(StrEnum):
 
 
 class GatewayError(Exception):
-    """Базовое исключение Gateway, которое сервисы поднимают вместо HTTPException."""
+    """Базовое исключение приложения, которое сервисы поднимают вместо HTTPException."""
 
     def __init__(
         self,
@@ -111,7 +111,7 @@ class UpstreamTimeoutError(GatewayError):
 
 
 class UpstreamAuthError(GatewayError):
-    """Провайдер отклонил серверный ключ Gateway: ошибка конфигурации.
+    """Провайдер отклонил серверный ключ приложения: ошибка конфигурации.
     Соответствует HTTP 503.
     """
 

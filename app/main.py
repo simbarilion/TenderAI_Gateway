@@ -11,6 +11,7 @@ from fastapi import FastAPI
 
 from app.core.config import Settings, get_settings
 from app.core.exception_handlers import register_exception_handlers
+from app.core.http_client import dispose_http_client, init_http_client
 from app.core.logging import setup_logging
 from app.core.middleware import RequestIdMiddleware
 from app.db.redis import dispose_redis, init_redis
@@ -25,10 +26,16 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     settings: Settings = app.state.settings
     init_db(settings.resolve_database_url(), echo=settings.debug)
     await init_redis(settings.redis_url)
+    init_http_client(
+        settings.xai_base_url,
+        settings.http_timeout_seconds,
+        settings.xai_api_key,
+    )
     logger.info("Запуск %s", settings.app_name)
     try:
         yield
     finally:
+        await dispose_http_client()
         await dispose_redis()
         await dispose_db()
         logger.info("Остановка %s", settings.app_name)
