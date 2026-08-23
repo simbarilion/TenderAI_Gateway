@@ -1,4 +1,4 @@
-.PHONY: lint format test run
+.PHONY: lint format run seed
 
 lint:
 	poetry run ruff check .
@@ -9,3 +9,6 @@ format:
 
 run:
 	poetry run uvicorn app.main:app --reload
+
+seed:
+	poetry run seed

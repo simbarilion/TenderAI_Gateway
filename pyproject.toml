@@ -63,3 +63,6 @@ split-on-trailing-comma = true
 
 [tool.poetry]
 packages = [{ include = "app" }]
+
+[tool.poetry.scripts]
+seed = "app.scripts.seed:main"
