@@ -16,7 +16,7 @@ from app.repositories.ai_request_log import AIRequestLogRepository
 from app.services.ai import AIGenerateResult, AIService
 from app.services.rate_limit import RateLimitService
 
-_PROVIDER = "xai"
+_PROVIDER = "groq"
 
 
 class GenerationService:

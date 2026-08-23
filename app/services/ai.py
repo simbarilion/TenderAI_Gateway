@@ -1,5 +1,6 @@
 """Вызов Grok через OpenAI-совместимый Chat Completions."""
 
+import logging
 from dataclasses import dataclass
 from typing import Any
 
@@ -22,15 +23,24 @@ class AIGenerateResult:
     model: str
 
 
+logger = logging.getLogger(__name__)
+
+
 class AIService:
     """Проксирует prompt в xAI и мапит ошибки провайдера в кастомные исключения приложения."""
 
-    def __init__(self, client: httpx.AsyncClient, model: str) -> None:
+    def __init__(self, client: httpx.AsyncClient, model: str, api_key: str = "") -> None:
         self._client = client
         self._model = model
+        self._api_key = api_key
 
     async def generate(self, prompt: str) -> AIGenerateResult:
         """Отправляет system + user в `/chat/completions` и возвращает текст ответа."""
+        if not self._api_key.strip():
+            raise UpstreamAuthError(
+                "Не задан серверный ключ LLM (XAI_API_KEY). Нужен бесплатный ключ Groq, не ключ из seed."
+            )
+
         payload = {
             "model": self._model,
             "messages": [
@@ -45,6 +55,7 @@ class AIService:
         except httpx.RequestError as exc:
             raise UpstreamUnavailableError() from exc
 
+        logger.info("Ответ xAI: HTTP %s, модель %s", response.status_code, self._model)
         self._raise_for_upstream_status(response.status_code)
         return self._parse_success(response)
 

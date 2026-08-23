@@ -30,6 +30,7 @@ API Gateway тендерной IT-площадки. Приложение про�
 **Авторизация**
 - Заголовок `Authorization: Bearer <api_key>`
 - Ключ выдаёт `poetry run seed`; в PostgreSQL хранится только SHA-256 хеш
+- В Swagger: кнопка **Authorize**, вставьте только сам ключ, без слова `Bearer`
 
 **Ограничения**
 - Не больше 5 запросов в минуту на пользователя (`rate_limit:{user_id}` в Redis)

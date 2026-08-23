@@ -1,6 +1,7 @@
 """Зависимости HTTP-слоя: текущий пользователь и сервисы generate."""
 
-from fastapi import Depends, Header
+from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -15,6 +16,8 @@ from app.services.auth import AuthenticatedUser, AuthService
 from app.services.generation import GenerationService
 from app.services.rate_limit import RateLimitService
 
+_bearer = HTTPBearer(auto_error=False)
+
 
 def _settings() -> Settings:
     """Отдаёт кэшированные настройки приложения."""
@@ -22,14 +25,16 @@ def _settings() -> Settings:
 
 
 async def get_current_user(
-    authorization: str | None = Header(default=None),
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer),
     session: AsyncSession = Depends(get_session),
 ) -> AuthenticatedUser:
-    """Читает Bearer-ключ и проверяет его через AuthService."""
-    if authorization is None or not authorization.startswith("Bearer "):
+    """Читает Bearer-ключ и проверяет его через AuthService.
+
+    `auto_error=False`, чтобы пустой заголовок давал наш 401, а не 403 Swagger.
+    """
+    if credentials is None or not credentials.credentials.strip():
         raise AuthenticationError()
-    raw_key = authorization.removeprefix("Bearer ")
-    return await AuthService(APIKeyRepository(session)).authenticate(raw_key)
+    return await AuthService(APIKeyRepository(session)).authenticate(credentials.credentials)
 
 
 def get_generation_service(
@@ -44,7 +49,7 @@ def get_generation_service(
             settings.rate_limit_requests,
             settings.rate_limit_window_seconds,
         ),
-        ai_service=AIService(get_http_client(), settings.xai_model),
+        ai_service=AIService(get_http_client(), settings.xai_model, settings.xai_api_key),
         logs=AIRequestLogRepository(session),
         session=session,
         default_model=settings.xai_model,

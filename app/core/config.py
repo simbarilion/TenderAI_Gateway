@@ -60,15 +60,15 @@ class Settings(BaseSettings):
 
     xai_api_key: str = Field(
         default="",
-        description="Серверный ключ xAI.",
+        description="Серверный ключ LLM (Groq).",
     )
     xai_base_url: str = Field(
-        default="https://api.x.ai/v1",
-        description="Базовый URL OpenAI-совместимого API xAI.",
+        default="https://api.groq.com/openai/v1",
+        description="Базовый URL OpenAI-совместимого API. По умолчанию бесплатный Groq.",
     )
     xai_model: str = Field(
-        default="grok-3-mini",
-        description="Идентификатор модели Grok.",
+        default="openai/gpt-oss-20b",
+        description="Идентификатор модели. По умолчанию бесплатная модель Groq.",
     )
     http_timeout_seconds: float = Field(
         default=30.0,
