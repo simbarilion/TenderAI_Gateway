@@ -10,8 +10,5 @@ __pycache__
 .env
 *.log
 logs
-memory-bank
-analysis
-algorithm
 *.md
 .pre-commit-config.yaml

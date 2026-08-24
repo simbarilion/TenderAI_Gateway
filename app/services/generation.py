@@ -20,7 +20,7 @@ _PROVIDER = "groq"
 
 
 class GenerationService:
-    """Склеивает rate limit, Grok и запись лога. Prompt и ответ в БД не пишет."""
+    """Склеивает rate limit, ai_service и запись лога. Prompt и ответ в БД не пишет."""
 
     def __init__(
         self,

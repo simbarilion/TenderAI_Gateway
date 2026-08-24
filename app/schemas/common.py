@@ -18,6 +18,6 @@ class ErrorResponse(BaseModel):
         }
     )
 
-    error: str = Field(description="Машиночитаемый код: authentication_error, rate_limit_exceeded, upstream_* и др.")
+    error: str = Field(description="Машиночитаемый код: authentication_error, rate_limit_exceeded и др.")
     message: str = Field(description="Текст ошибки для клиента без внутренних деталей.")
     request_id: str = Field(description="Значение заголовка X-Request-ID для поиска записи в логах.")

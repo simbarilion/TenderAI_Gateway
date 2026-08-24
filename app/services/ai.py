@@ -17,7 +17,7 @@ from app.core.exceptions import (
 
 @dataclass(frozen=True, slots=True)
 class AIGenerateResult:
-    """Ответ модели."""
+    """Ответ AI модели."""
 
     text: str
     model: str
@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 
 class AIService:
-    """Проксирует prompt в xAI и мапит ошибки провайдера в кастомные исключения приложения."""
+    """Проксирует prompt в AI и мапит ошибки провайдера в кастомные исключения приложения."""
 
     def __init__(self, client: httpx.AsyncClient, model: str, api_key: str = "") -> None:
         self._client = client

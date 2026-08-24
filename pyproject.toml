@@ -1,7 +1,7 @@
 [project]
 name = "tenderai-gateway"
 version = "0.1.0"
-description = ""
+description = "Asynchronous API Gateway for an IT tender platform"
 authors = [
     {name = "simbarilion",email = "nadezhda13popova@gmail.com"}
 ]

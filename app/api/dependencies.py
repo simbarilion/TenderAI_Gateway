@@ -29,7 +29,6 @@ async def get_current_user(
     session: AsyncSession = Depends(get_session),
 ) -> AuthenticatedUser:
     """Читает Bearer-ключ и проверяет его через AuthService.
-
     `auto_error=False`, чтобы пустой заголовок давал наш 401, а не 403 Swagger.
     """
     if credentials is None or not credentials.credentials.strip():
