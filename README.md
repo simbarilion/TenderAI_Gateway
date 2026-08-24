@@ -36,23 +36,10 @@ Gateway не выполняет обработку тендерной докум
 - не выполняет парсинг документов;
 - не хранит тендеры, документы или другие предметные сущности.
 
-<<<<<<< Updated upstream
-=======
-Основной API-эндпоинт:
-
-```text
-POST /api/v1/ai/generate
-```
-
->>>>>>> Stashed changes
 ### Интерактивная документация OpenAPI:
 
 http://127.0.0.1:8000/docs
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 ### Обработка запроса
 
 - Запрос проходит следующую последовательность этапов:
@@ -69,22 +56,14 @@ http://127.0.0.1:8000/docs
             │
             ▼
     Redis
-<<<<<<< Updated upstream
     rate_limit:&#123;user_id&#125;
-=======
-    rate_limit:{user_id}
->>>>>>> Stashed changes
     TTL = 60 секунд
             │
             └── лимит превышен - 429
             │
             ▼
     HTTPX
-<<<<<<< Updated upstream
     POST &#123;XAI_BASE_URL&#125;/chat/completions
-=======
-    POST {XAI_BASE_URL}/chat/completions
->>>>>>> Stashed changes
             │
             │ system instruction
             │ + пользовательский prompt
@@ -98,22 +77,12 @@ http://127.0.0.1:8000/docs
             │ prompt и ответ не сохраняются
             ▼
     200 OK
-<<<<<<< Updated upstream
     &#123;
       "response": "...",
       "model": "..."
     &#125;
 ```
 
-=======
-    {
-      "response": "...",
-      "model": "..."
-    }
-```
-
-
->>>>>>> Stashed changes
 - Технический лог создаётся как при успешном вызове модели, так и при ошибке внешнего провайдера.
 
 - Ограничение Gateway применяется до обращения к LLM. Если пользователь превысил установленный лимит, 
@@ -401,7 +370,6 @@ redis:6379
 
 ```angular2html
 Тело запроса:
-<<<<<<< Updated upstream
     &#123;
       "prompt": "..."
     &#125;
@@ -410,16 +378,6 @@ redis:6379
       "response": "...",
       "model": "..."
     &#125;
-=======
-    {
-      "prompt": "..."
-    }
-Успешный ответ:
-    {
-      "response": "...",
-      "model": "..."
-    }
->>>>>>> Stashed changes
 ```
 
 #### Примеры запросов
@@ -479,11 +437,7 @@ curl -X POST http://127.0.0.1:8000/api/v1/ai/generate `
   "и дате. Какие эндпоинты и поля минимально заложить в OpenAPI, если в ТЗ больше ничего нет?\"}"
 ```
 
-<<<<<<< Updated upstream
 ### Обработка ошибок и логирование
-=======
-### Обработка ошибок
->>>>>>> Stashed changes
 
 - Все ошибки Gateway возвращаются в едином формате:
 
@@ -499,18 +453,14 @@ curl -X POST http://127.0.0.1:8000/api/v1/ai/generate `
 
 - Если клиент не передаёт идентификатор, Gateway создаёт UUID.
 
-<<<<<<< Updated upstream
+
 - Идентификатор **X-Request-ID**:
-=======
-- Идентификатор:
->>>>>>> Stashed changes
 
 * доступен в контексте логирования;
 * возвращается в заголовке ответа;
 * включается в тело стандартных ошибок;
 * позволяет сопоставить ошибку клиента с серверными логами.
 
-<<<<<<< Updated upstream
 #### Примеры логов
 
 Смотреть: `docker compose logs -f api`
@@ -533,8 +483,6 @@ HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200
 429 Too Many Requests
 ```
 
-=======
->>>>>>> Stashed changes
 - При вызове LLM в техническом журнале сохраняются:
 
 * провайдер;
